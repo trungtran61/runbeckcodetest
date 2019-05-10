@@ -1,10 +1,5 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RunbeckProcessFile
@@ -27,62 +22,29 @@ namespace RunbeckProcessFile
             this.Close();
         }
 
+       
         private void ProcessFile_Click(object sender, EventArgs e)
         {
-            Cursor = Cursors.WaitCursor;             
-
-            var delimiter = (char) (CommaDelimited.Checked ? ',': '\t');
-
-            var validRecords = new List<string>();
-            var invalidRecords = new List<string>();
+            Cursor = Cursors.WaitCursor;
 
             try
             {
-                string[] lines = File.ReadAllLines(FileName.Text);
-                lines = lines.Skip(1).ToArray();
-                TotalRecords.Text = string.Concat("Total Records:    ", lines.Length);
+                // instantiate new file processor with user specified values
+                var fileProcessor = new FileProcessor(
+                    FileName.Text,
+                    CommaDelimited.Checked ? FileType.CSV : FileType.TSV,
+                    Convert.ToInt16(FieldsCount.Value));
+                
+                fileProcessor.ProcessFile();
 
-                // process all lines in parallel
-                Parallel.ForEach(lines, (line, _, lineNumber) =>
-                {
-                    if (line.Split(delimiter).Length == FieldsCount.Value)
-                    {
-                        lock (validRecords)
-                        {
-                            validRecords.Add(line);
-                        }
-                    }
-                    else
-                    {
-                        lock (invalidRecords)
-                        {
-                            invalidRecords.Add(line);
-                        }
-                    }
-                });
-
-                // create valid records file
-                if (validRecords.Count > 0)
-                {
-                    File.WriteAllLines("ValidRecords.txt", validRecords.ToArray());
-                }
-
-                // create invalid record file
-                if (invalidRecords.Count > 0)
-                {
-                    File.WriteAllLines("InvalidRecords.txt", invalidRecords.ToArray());
-                }
-
-                ValidRecordsCount.Text = string.Concat("Valid Records:    ", validRecords.Count);
-                InvalidRecordsCount.Text = string.Concat("Invalid Records: ", invalidRecords.Count);
-
-                validRecords.Clear();
-                invalidRecords.Clear();
+                TotalRecords.Text = string.Concat("Total Records:    ", fileProcessor.TotalRecordsCount);
+                ValidRecordsCount.Text = string.Concat("Valid Records:    ", fileProcessor.ValidRecordsCount);
+                InvalidRecordsCount.Text = string.Concat("Invalid Records: ", fileProcessor.InvalidRecordsCount);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(string.Concat("Error occurs while processing file: ", ex.Message));
-            }
+            }           
 
             Cursor = Cursors.Arrow;
         }
@@ -95,6 +57,7 @@ namespace RunbeckProcessFile
         private void FileDialog_FileOk(object sender, CancelEventArgs e)
         {
             FileName.Text = FileDialog.FileName;
+            // only enable Process File button if file was specified
             ProcessFile.Enabled = true;
         }
     }
