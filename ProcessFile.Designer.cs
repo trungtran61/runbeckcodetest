@@ -40,13 +40,14 @@
             this.FileDialog = new System.Windows.Forms.OpenFileDialog();
             this.ValidRecordsCount = new System.Windows.Forms.Label();
             this.InvalidRecordsCount = new System.Windows.Forms.Label();
+            this.TotalRecords = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.FieldsCount)).BeginInit();
             this.SuspendLayout();
             // 
             // ProcessFile
             // 
             this.ProcessFile.Enabled = false;
-            this.ProcessFile.Location = new System.Drawing.Point(58, 266);
+            this.ProcessFile.Location = new System.Drawing.Point(58, 292);
             this.ProcessFile.Name = "ProcessFile";
             this.ProcessFile.Size = new System.Drawing.Size(141, 32);
             this.ProcessFile.TabIndex = 0;
@@ -56,7 +57,7 @@
             // 
             // CloseForm
             // 
-            this.CloseForm.Location = new System.Drawing.Point(685, 267);
+            this.CloseForm.Location = new System.Drawing.Point(685, 293);
             this.CloseForm.Name = "CloseForm";
             this.CloseForm.Size = new System.Drawing.Size(98, 31);
             this.CloseForm.TabIndex = 1;
@@ -145,7 +146,7 @@
             // ValidRecordsCount
             // 
             this.ValidRecordsCount.AutoSize = true;
-            this.ValidRecordsCount.Location = new System.Drawing.Point(58, 220);
+            this.ValidRecordsCount.Location = new System.Drawing.Point(58, 246);
             this.ValidRecordsCount.Name = "ValidRecordsCount";
             this.ValidRecordsCount.Size = new System.Drawing.Size(0, 17);
             this.ValidRecordsCount.TabIndex = 9;
@@ -153,16 +154,25 @@
             // InvalidRecordsCount
             // 
             this.InvalidRecordsCount.AutoSize = true;
-            this.InvalidRecordsCount.Location = new System.Drawing.Point(58, 237);
+            this.InvalidRecordsCount.Location = new System.Drawing.Point(58, 263);
             this.InvalidRecordsCount.Name = "InvalidRecordsCount";
             this.InvalidRecordsCount.Size = new System.Drawing.Size(0, 17);
             this.InvalidRecordsCount.TabIndex = 10;
+            // 
+            // TotalRecords
+            // 
+            this.TotalRecords.AutoSize = true;
+            this.TotalRecords.Location = new System.Drawing.Point(58, 216);
+            this.TotalRecords.Name = "TotalRecords";
+            this.TotalRecords.Size = new System.Drawing.Size(0, 17);
+            this.TotalRecords.TabIndex = 11;
             // 
             // ProcessFileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(826, 336);
+            this.ClientSize = new System.Drawing.Size(826, 348);
+            this.Controls.Add(this.TotalRecords);
             this.Controls.Add(this.InvalidRecordsCount);
             this.Controls.Add(this.ValidRecordsCount);
             this.Controls.Add(this.TabDelimited);
@@ -197,6 +207,7 @@
         private System.Windows.Forms.OpenFileDialog FileDialog;
         private System.Windows.Forms.Label ValidRecordsCount;
         private System.Windows.Forms.Label InvalidRecordsCount;
+        private System.Windows.Forms.Label TotalRecords;
     }
 }
 

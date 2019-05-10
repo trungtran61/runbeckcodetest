@@ -35,40 +35,55 @@ namespace RunbeckProcessFile
 
             var validRecords = new List<string>();
             var invalidRecords = new List<string>();
-            
-            string[] lines = File.ReadAllLines(FileName.Text);
-            lines = lines.Skip(1).ToArray();
 
-            // process all lines in parallel
-            Parallel.ForEach(lines, (line, _ , lineNumber) =>
+            try
             {
-                if (line.Split(delimiter).Length == FieldsCount.Value)    
-                {
-                    validRecords.Add(line);
-                }
-                else
-                {
-                    invalidRecords.Add(line);
-                }
-            });
+                string[] lines = File.ReadAllLines(FileName.Text);
+                lines = lines.Skip(1).ToArray();
+                TotalRecords.Text = string.Concat("Total Records:    ", lines.Length);
 
-            // create valid records file
-            if (validRecords.Count > 0)
+                // process all lines in parallel
+                Parallel.ForEach(lines, (line, _, lineNumber) =>
+                {
+                    if (line.Split(delimiter).Length == FieldsCount.Value)
+                    {
+                        lock (validRecords)
+                        {
+                            validRecords.Add(line);
+                        }
+                    }
+                    else
+                    {
+                        lock (invalidRecords)
+                        {
+                            invalidRecords.Add(line);
+                        }
+                    }
+                });
+
+                // create valid records file
+                if (validRecords.Count > 0)
+                {
+                    File.WriteAllLines("ValidRecords.txt", validRecords.ToArray());
+                }
+
+                // create invalid record file
+                if (invalidRecords.Count > 0)
+                {
+                    File.WriteAllLines("InvalidRecords.txt", invalidRecords.ToArray());
+                }
+
+                ValidRecordsCount.Text = string.Concat("Valid Records:    ", validRecords.Count);
+                InvalidRecordsCount.Text = string.Concat("Invalid Records: ", invalidRecords.Count);
+
+                validRecords.Clear();
+                invalidRecords.Clear();
+            }
+            catch (Exception ex)
             {
-                File.WriteAllLines("ValidRecords.txt", validRecords.ToArray());
+                MessageBox.Show(string.Concat("Error occurs while processing file: ", ex.Message));
             }
 
-            // create invalid record file
-            if (invalidRecords.Count > 0)
-            {
-                File.WriteAllLines("InvalidRecords.txt", invalidRecords.ToArray());
-            }
-
-            ValidRecordsCount.Text = string.Concat("Valid Records: ", validRecords.Count);
-            InvalidRecordsCount.Text = string.Concat("Invalid Records: ", invalidRecords.Count);
-
-            validRecords.Clear();
-            invalidRecords.Clear();
             Cursor = Cursors.Arrow;
         }
 
