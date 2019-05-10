@@ -1,4 +1,4 @@
-# runbeckcodetest
+# Runbeck code test
 1. Open project\solution file with VS 2017.
 2. Run project, when form opens, click on ellipsis and select either RunbeckInput.csv (comma delimited) or RunbeckInputTab.txt (tab delimited) 
 3. Select either comma delimited (default) or tab delimited radio button
